@@ -1,0 +1,17 @@
+export const C = {
+    bg: "var(--bg)",
+    card: "var(--card)",
+    primary: "var(--primary)",
+    accent: "var(--accent)",
+    accentLight: "var(--accent-light)",
+    text: "var(--text)",
+    muted: "var(--muted)",
+    border: "var(--border)",
+    success: "var(--success)",
+    danger: "var(--danger)",
+    warning: "var(--warning)",
+    info: "var(--info)",
+    display: "var(--font-display)",
+    mono: "var(--font-mono)",
+    sans: "var(--font-sans)",
+} as const;

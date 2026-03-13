@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── DIGESTER ───────────────────────────────────────────────
+model Digester {
+  id            String             @id
+  location      String
+  installedDate DateTime
+  status        String             @default("active")
+  createdAt     DateTime           @default(now())
+
+  // Relations
+  user          User?
+  households    Household[]
+  feedstockLogs FeedstockLog[]
+  meterReadings FlowMeterReading[]
+  distributions GasDistribution[]
+  compostLogs   CompostLog[]
+}
+
+// ── USER ───────────────────────────────────────────────
+model User {
+  id           String    @id
+  name         String
+  phone        String
+  passwordHash String
+  role         String    @default("operator") // "operator" | "admin"
+  status       String    @default("active")   // "active" | "inactive"
+  createdAt    DateTime  @default(now())
+
+  // Only for operators — null for admin
+  digesterId   String?   @unique
+  digester     Digester? @relation(fields: [digesterId], references: [id])
+}
+
+// ── HOUSEHOLD ──────────────────────────────────────────────
+model Household {
+  id           String   @id @default(uuid())
+  headName     String
+  phone        String
+  address      String?
+  members      Int
+  fuelReplaced String[] // array of fuel option strings
+  joinedAt     DateTime @default(now())
+
+  // One digester → Many households
+  digesterId   String
+  digester     Digester @relation(fields: [digesterId], references: [id])
+
+  // Relations
+  distributions GasDistribution[]
+}
+
+// ── FEEDSTOCK LOG ──────────────────────────────────────────
+model FeedstockLog {
+  id          String   @id @default(uuid())
+  date        DateTime
+  weight      Float
+  waterLitres Float    @default(0)
+  type        String
+  photoUrl    String
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  // Who submitted it
+  operatorId  String
+  digesterId  String
+  digester    Digester @relation(fields: [digesterId], references: [id])
+}
+
+// ── FLOW METER READING ─────────────────────────────────────
+model FlowMeterReading {
+  id         String   @id @default(uuid())
+  date       DateTime
+  reading    Float    // cumulative meter value
+  photoUrl   String
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  // Who submitted it
+  operatorId String
+  digesterId String
+  digester   Digester @relation(fields: [digesterId], references: [id])
+}
+
+// ── GAS DISTRIBUTION ───────────────────────────────────────
+model GasDistribution {
+  id         String   @id @default(uuid())
+  date       DateTime
+  volume     Float
+  createdAt  DateTime @default(now())
+
+  // Who submitted it
+  operatorId String
+
+  // Which digester
+  digesterId String
+  digester   Digester  @relation(fields: [digesterId], references: [id])
+
+  // Which household received gas
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id])
+}
+
+// ── COMPOST LOG ────────────────────────────────────────────
+model CompostLog {
+  id         String   @id @default(uuid())
+  date       DateTime
+  bags       Int
+  photoUrl   String
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  // Who submitted it
+  operatorId String
+  digesterId String
+  digester   Digester @relation(fields: [digesterId], references: [id])
+}
