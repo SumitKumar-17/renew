@@ -181,12 +181,12 @@ export default function DistributionPage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                     <div style={{ ...shimmer, width: 200, height: 28 }} />
                     <div style={{ ...shimmer, width: 260, height: 14 }} />
-                    <div style={{ background: "#fff", borderRadius: 12, border: `1px solid ${C.border}`, padding: "16px 20px" }}>
+                    <div style={{ background: C.card, borderRadius: 12, border: `1px solid ${C.border}`, padding: "16px 20px" }}>
                         <div style={{ ...shimmer, width: 120, height: 12, marginBottom: 8 }} />
                         <div style={{ ...shimmer, width: "100%", height: 42 }} />
                     </div>
                     {[1, 2, 3].map(i => (
-                        <div key={i} style={{ background: "#fff", borderRadius: 12, border: `1px solid ${C.border}`, padding: "11px 14px", display: "flex", alignItems: "center", gap: 12 }}>
+                        <div key={i} style={{ background: C.card, borderRadius: 12, border: `1px solid ${C.border}`, padding: "11px 14px", display: "flex", alignItems: "center", gap: 12 }}>
                             <div style={{ ...shimmer, width: 17, height: 17, borderRadius: 3, flexShrink: 0 }} />
                             <div style={{ flex: 1 }}>
                                 <div style={{ ...shimmer, width: 120, height: 14, marginBottom: 6 }} />
@@ -291,7 +291,7 @@ export default function DistributionPage() {
                                         textAlign: "right",
                                         color: C.text,
                                         outline: "none",
-                                        background: "#fff",
+                                        background: C.card,
                                     }}
                                 />
                                 <span style={{ fontSize: 11, color: C.muted }}>m³</span>

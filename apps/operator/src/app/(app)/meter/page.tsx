@@ -202,7 +202,7 @@ export default function MeterPage() {
             {/* Last reading summary card — always shown once loaded */}
             {!loadingLast && (
                 <Card style={{ background: C.primary, border: "none" }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14 }}>
                         <div>
                             <div style={{ fontSize: 10, color: "#9DC0AB", fontFamily: C.mono, letterSpacing: 1.5 }}>
                                 LAST READING
@@ -250,7 +250,7 @@ export default function MeterPage() {
 
             <Card>
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14 }}>
                         <Field label="Date" required>
                             <TI
                                 type="date"

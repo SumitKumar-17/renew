@@ -195,7 +195,7 @@ export default function HistoryPage() {
                             <div key={i} style={{ ...shimmer, width: 90, height: 32, borderRadius: 8 }} />
                         ))}
                     </div>
-                    <div style={{ background: "#fff", borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+                    <div style={{ background: C.card, borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden" }}>
                         {[1, 2, 3, 4, 5].map((i, idx, arr) => (
                             <div key={i} style={{ padding: "12px 14px", borderBottom: idx < arr.length - 1 ? `1px solid ${C.border}` : "none", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
                                 <div style={{ flex: 1 }}>

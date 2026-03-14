@@ -15,7 +15,7 @@ export default function AppLayout({
                     style={{
                         flex: 1,
                         overflowY: "auto",
-                        padding: "18px 16px 90px",
+                        padding: "18px 16px 80px",
                         display: "flex",
                         flexDirection: "column",
                         gap: 16,

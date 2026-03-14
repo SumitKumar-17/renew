@@ -55,22 +55,25 @@ export const BottomNav = () => {
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
-                            padding: "8px 0 6px",
+                            justifyContent: "center",
+                            padding: "10px 2px 8px",
+                            minHeight: 56,
                             textDecoration: "none",
                             color: active ? C.primary : C.muted,
                             borderTop: active ? `2px solid ${C.primary}` : "2px solid transparent",
                         }}
                     >
                         <item.icon
-                            size={16}
+                            size={18}
                             strokeWidth={active ? 2.5 : 1.8}
                         />
                         <span
                             style={{
-                                fontSize: 8,
-                                marginTop: 2,
+                                fontSize: 9,
+                                marginTop: 3,
                                 fontFamily: C.sans,
                                 fontWeight: active ? 700 : 400,
+                                lineHeight: 1,
                             }}
                         >
                             {item.label}

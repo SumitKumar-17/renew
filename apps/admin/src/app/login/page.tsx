@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Flame, Eye, EyeOff } from "lucide-react";
-import { authApi } from "@/lib/api/auth.api";
+import { authApi } from "@/lib/api/admin.api";
 import { useAuthStore } from "@/store/authStore";
 import { C } from "@/lib/utils/tokens";
-import { Btn, Field, TI, AlertBox } from "@/components/ui";
 
 export default function LoginPage() {
     const [id, setId] = useState("");
@@ -23,30 +22,21 @@ export default function LoginPage() {
             setError("Please enter your ID and password");
             return;
         }
-
         setLoading(true);
         setError("");
 
         try {
             const result = await authApi.login(id.trim(), pw);
-            await setAuth(result.user as any, result.token, result.refreshToken);
 
-            if (result.user.role === "admin") {
-                // Admin goes to admin app — not operator app
-                setError("Admin accounts cannot access the operator app");
+            if (result.user.role !== "admin") {
+                setError("Only admin accounts can access this portal");
                 return;
             }
 
-            router.replace("/dashboard");
-
+            setAuth(result.user as any, result.accessToken);
+            router.replace("/overview");
         } catch (err: any) {
-            if (!navigator.onLine) {
-                setError("You must be online to sign in");
-            } else {
-                setError(
-                    err?.response?.data?.message ?? "Invalid credentials"
-                );
-            }
+            setError(err?.response?.data?.message ?? "Invalid credentials");
         } finally {
             setLoading(false);
         }
@@ -64,7 +54,6 @@ export default function LoginPage() {
             }}
         >
             <div style={{ width: "100%", maxWidth: 400 }}>
-
                 {/* Logo */}
                 <div style={{ textAlign: "center", marginBottom: 40 }}>
                     <div
@@ -101,7 +90,7 @@ export default function LoginPage() {
                             marginTop: 4,
                         }}
                     >
-                        MRV PLATFORM
+                        ADMIN PORTAL
                     </div>
                 </div>
 
@@ -123,28 +112,59 @@ export default function LoginPage() {
                             marginBottom: 24,
                         }}
                     >
-                        Sign In
+                        Sign In — Admin
                     </div>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 16,
-                        }}
-                    >
-                        {/* ID Field */}
-                        <Field label="Operator ID" required>
-                            <TI
+                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                        {/* ID */}
+                        <div>
+                            <label
+                                style={{
+                                    fontSize: 11,
+                                    color: C.muted,
+                                    textTransform: "uppercase",
+                                    letterSpacing: 0.8,
+                                    fontFamily: C.sans,
+                                    display: "block",
+                                    marginBottom: 6,
+                                }}
+                            >
+                                Admin ID *
+                            </label>
+                            <input
                                 value={id}
                                 onChange={e => setId(e.target.value)}
-                                placeholder="e.g. OP001"
                                 onKeyDown={e => e.key === "Enter" && handleLogin()}
+                                placeholder="e.g. ADMIN"
+                                style={{
+                                    border: `1.5px solid ${C.border}`,
+                                    borderRadius: 8,
+                                    padding: "10px 13px",
+                                    fontSize: 14,
+                                    fontFamily: C.sans,
+                                    color: C.text,
+                                    background: C.card,
+                                    width: "100%",
+                                    outline: "none",
+                                }}
                             />
-                        </Field>
+                        </div>
 
-                        {/* Password Field */}
-                        <Field label="Password" required>
+                        {/* Password */}
+                        <div>
+                            <label
+                                style={{
+                                    fontSize: 11,
+                                    color: C.muted,
+                                    textTransform: "uppercase",
+                                    letterSpacing: 0.8,
+                                    fontFamily: C.sans,
+                                    display: "block",
+                                    marginBottom: 6,
+                                }}
+                            >
+                                Password *
+                            </label>
                             <div style={{ position: "relative" }}>
                                 <input
                                     type={show ? "text" : "password"}
@@ -173,7 +193,6 @@ export default function LoginPage() {
                                         transform: "translateY(-50%)",
                                         background: "none",
                                         border: "none",
-                                        cursor: "pointer",
                                         color: C.muted,
                                         display: "flex",
                                     }}
@@ -181,22 +200,44 @@ export default function LoginPage() {
                                     {show ? <EyeOff size={16} /> : <Eye size={16} />}
                                 </button>
                             </div>
-                        </Field>
+                        </div>
 
                         {/* Error */}
                         {error && (
-                            <AlertBox type="error">{error}</AlertBox>
+                            <div
+                                style={{
+                                    background: "#FFF1F1",
+                                    border: `1px solid #FCA5A5`,
+                                    borderRadius: 8,
+                                    padding: "10px 14px",
+                                    fontSize: 13,
+                                    color: C.danger,
+                                    fontFamily: C.sans,
+                                }}
+                            >
+                                {error}
+                            </div>
                         )}
 
                         {/* Submit */}
-                        <Btn
+                        <button
                             onClick={handleLogin}
-                            fullWidth
-                            size="lg"
                             disabled={loading}
+                            style={{
+                                background: C.primary,
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 8,
+                                padding: "12px 24px",
+                                fontSize: 15,
+                                fontWeight: 600,
+                                fontFamily: C.sans,
+                                width: "100%",
+                                opacity: loading ? 0.7 : 1,
+                            }}
                         >
                             {loading ? "Signing in..." : "Sign In →"}
-                        </Btn>
+                        </button>
                     </div>
 
                     {/* Dev hint */}
@@ -212,7 +253,7 @@ export default function LoginPage() {
                             lineHeight: 1.9,
                         }}
                     >
-                        OP001 / pass123 · OP002 / pass456
+                        ADMIN / admin123
                     </div>
                 </div>
             </div>

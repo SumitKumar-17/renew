@@ -15,6 +15,9 @@ import distributionRoutes from "./modules/distribution/distribution.routes";
 import compostRoutes from "./modules/compost/compost.routes";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import syncRoutes from "./modules/sync/sync.routes";
+import digesterRoutes from "./modules/digesters/digester.routes";
+import operatorRoutes from "./modules/operators/operators.routes";
+import reportRoutes from "./modules/reports/reports.routes";
 
 
 export const createApp = () => {
@@ -60,9 +63,9 @@ export const createApp = () => {
     app.use("/compost", compostRoutes);
     app.use("/dashboard", dashboardRoutes);
     app.use("/sync", syncRoutes);
-    // app.use("/digesters",    digesterRoutes);
-    // app.use("/operators",    operatorRoutes);
-    // app.use("/reports",      reportRoutes);
+    app.use("/digesters",    digesterRoutes);
+    app.use("/operators",    operatorRoutes);
+    app.use("/reports",      reportRoutes);
 
     // ── 404 and error handlers — always last
     app.use(notFound);

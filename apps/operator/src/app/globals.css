@@ -38,6 +38,10 @@ body {
   font-family: var(--font-sans);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  /* Remove tap highlight on mobile */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ── Scrollbar ── */
@@ -66,6 +70,9 @@ textarea:focus {
 /* ── Button micro-interactions ── */
 button {
   transition: filter 0.12s, transform 0.1s;
+  /* Remove 300ms tap delay on mobile */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button:not(:disabled):hover {
@@ -74,6 +81,12 @@ button:not(:disabled):hover {
 
 button:not(:disabled):active {
   transform: scale(0.97);
+}
+
+/* ── Link tap fix ── */
+a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* ── Animations ── */
@@ -110,7 +123,7 @@ button:not(:disabled):active {
 }
 
 .fade-in {
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.22s ease;
 }
 
 .slide-up {
@@ -130,4 +143,20 @@ button:not(:disabled):active {
   display: flex;
   flex-direction: column;
   background: var(--bg);
+  overflow-x: hidden;
+  /* Full-height sidebar on desktop — show container shadow */
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.06);
+}
+
+/* ── 2-col grid helper — prevents overflow on narrow screens ── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+/* ── Shimmer animation ── */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }

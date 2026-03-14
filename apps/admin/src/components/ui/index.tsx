@@ -2,15 +2,10 @@
 
 import React from "react";
 import { C } from "@/lib/utils/tokens";
+import { AlertTriangle, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { FUEL_OPTIONS } from "@renew-hope/shared";
-import {
-    AlertTriangle,
-    ChevronLeft,
-    ChevronRight,
-    X,
-} from "lucide-react";
 
-// ── CARD ─────────────────────────────────────────────────
+// ── CARD ──────────────────────────────────────────────────
 export const Card = ({
     children,
     style = {},
@@ -50,15 +45,7 @@ export const Heading = ({
 }) => {
     const sz = { sm: 14, md: 17, lg: 21, xl: 27 };
     return (
-        <div
-            style={{
-                fontFamily: C.display,
-                fontWeight: 700,
-                fontSize: sz[size],
-                color: C.text,
-                ...s,
-            }}
-        >
+        <div style={{ fontFamily: C.display, fontWeight: 700, fontSize: sz[size], color: C.text, ...s }}>
             {children}
         </div>
     );
@@ -99,66 +86,63 @@ export const Tag = ({
     );
 };
 
-// ── BUTTON ────────────────────────────────────────────────
+// ── BTN ───────────────────────────────────────────────────
 export const Btn = ({
     children,
     onClick,
     variant = "primary",
     size = "md",
-    disabled,
-    fullWidth,
-    type = "button",
+    disabled = false,
+    fullWidth = false,
     icon: Icon,
+    style: s = {},
 }: {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     onClick?: () => void;
     variant?: "primary" | "accent" | "secondary" | "danger" | "ghost";
     size?: "sm" | "md" | "lg";
     disabled?: boolean;
     fullWidth?: boolean;
-    type?: "button" | "submit";
     icon?: React.ElementType;
+    style?: React.CSSProperties;
 }) => {
     const bg: Record<string, string> = {
-        primary: C.primary, accent: C.accent,
-        secondary: "transparent", danger: C.danger, ghost: "transparent",
+        primary: C.primary, accent: C.accent, danger: C.danger,
+        secondary: "transparent", ghost: "transparent",
     };
     const fg: Record<string, string> = {
-        primary: "#fff", accent: "#fff",
-        secondary: C.primary, danger: "#fff", ghost: C.muted,
+        primary: "#fff", accent: "#fff", danger: "#fff",
+        secondary: C.primary, ghost: C.muted,
     };
-    const br: Record<string, string> = {
-        secondary: `1.5px solid ${C.primary}`,
+    const border: Record<string, string> = {
+        primary: "none", accent: "none", danger: "none",
+        secondary: `1.5px solid ${C.primary}`, ghost: "none",
     };
-    const pd: Record<string, string> = {
-        sm: "6px 12px", md: "9px 18px", lg: "12px 24px",
-    };
+    const pad = { sm: "6px 12px", md: "9px 18px", lg: "12px 24px" };
+    const fs = { sm: 12, md: 13, lg: 15 };
 
     return (
         <button
-            type={type}
             onClick={onClick}
             disabled={disabled}
             style={{
                 background: bg[variant],
                 color: fg[variant],
-                border: br[variant] ?? "none",
-                padding: pd[size],
+                border: border[variant],
                 borderRadius: 8,
-                fontSize: size === "sm" ? 12 : 14,
-                fontFamily: C.sans,
+                padding: pad[size],
+                fontSize: fs[size],
                 fontWeight: 600,
-                cursor: disabled ? "not-allowed" : "pointer",
+                fontFamily: C.sans,
+                width: fullWidth ? "100%" : "auto",
                 opacity: disabled ? 0.5 : 1,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 6,
-                width: fullWidth ? "100%" : "auto",
-                justifyContent: "center",
-                transition: "filter 0.12s, transform 0.1s",
+                ...s,
             }}
         >
-            {Icon && <Icon size={14} />}
+            {Icon && <Icon size={size === "sm" ? 13 : 15} />}
             {children}
         </button>
     );
@@ -168,78 +152,67 @@ export const Btn = ({
 export const Field = ({
     label,
     required,
-    children,
     note,
-    hint,
-    error,
+    children,
 }: {
-    label?: string;
+    label: string;
     required?: boolean;
-    children: React.ReactNode;
     note?: string;
-    hint?: string;
-    error?: string;
+    children: React.ReactNode;
 }) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-        {label && (
-            <label
-                style={{
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: C.muted,
-                    textTransform: "uppercase",
-                    letterSpacing: 0.8,
-                }}
-            >
-                {label}
-                {required && <span style={{ color: C.danger }}> *</span>}
-            </label>
-        )}
+    <div>
+        <label
+            style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: C.muted,
+                textTransform: "uppercase",
+                letterSpacing: 0.8,
+                fontFamily: C.sans,
+                display: "block",
+                marginBottom: 6,
+            }}
+        >
+            {label}{required && " *"}{note && <span style={{ color: C.muted, textTransform: "none" }}> — {note}</span>}
+        </label>
         {children}
-        {(note || hint) && (
-            <span style={{ fontSize: 11, color: C.muted }}>{note ?? hint}</span>
-        )}
-        {error && (
-            <span style={{ fontSize: 11, color: C.danger }}>{error}</span>
-        )}
     </div>
 );
 
-// ── TEXT INPUT ────────────────────────────────────────────
+// ── TI — Text Input ───────────────────────────────────────
 export const TI = ({
     value,
     onChange,
+    onKeyDown,
     placeholder,
     type = "text",
-    disabled,
-    step,
     min,
     max,
-    inputMode,
-    onKeyDown,
+    step,
+    disabled,
+    style: s = {},
 }: {
     value: string | number;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     placeholder?: string;
     type?: string;
-    disabled?: boolean;
-    step?: string;
     min?: string;
     max?: string;
-    inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
-    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    step?: string;
+    disabled?: boolean;
+    style?: React.CSSProperties;
 }) => (
     <input
         type={type}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         placeholder={placeholder}
-        disabled={disabled}
-        step={step}
         min={min}
         max={max}
-        inputMode={inputMode}
-        onKeyDown={onKeyDown}
+        step={step}
+        disabled={disabled}
         style={{
             border: `1.5px solid ${C.border}`,
             borderRadius: 8,
@@ -249,20 +222,24 @@ export const TI = ({
             color: C.text,
             background: disabled ? C.bg : "#fff",
             width: "100%",
+            outline: "none",
             minWidth: 0,
+            ...s,
         }}
     />
 );
 
-// ── SELECT INPUT ──────────────────────────────────────────
+// ── SI — Select Input ─────────────────────────────────────
 export const SI = ({
     value,
     onChange,
     options,
+    placeholder,
 }: {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    options: { value: string; label: string }[] | string[];
+    options: Array<{ value: string; label: string }>;
+    placeholder?: string;
 }) => (
     <select
         value={value}
@@ -276,50 +253,15 @@ export const SI = ({
             color: value ? C.text : C.muted,
             background: "#fff",
             width: "100%",
+            outline: "none",
             minWidth: 0,
         }}
     >
-        <option value="">Select...</option>
-        {options.map(o => {
-            const val = typeof o === "string" ? o : o.value;
-            const lbl = typeof o === "string" ? o : o.label;
-            return (
-                <option key={val} value={val}>{lbl}</option>
-            );
-        })}
+        {placeholder && <option value="">{placeholder}</option>}
+        {options.map(o => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
     </select>
-);
-
-// ── TEXTAREA ──────────────────────────────────────────────
-export const TA = ({
-    value,
-    onChange,
-    placeholder,
-    rows = 3,
-}: {
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    placeholder?: string;
-    rows?: number;
-}) => (
-    <textarea
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        rows={rows}
-        style={{
-            border: `1.5px solid ${C.border}`,
-            borderRadius: 8,
-            padding: "9px 13px",
-            fontSize: 14,
-            fontFamily: C.sans,
-            color: C.text,
-            background: "#fff",
-            width: "100%",
-            resize: "vertical",
-            minWidth: 0,
-        }}
-    />
 );
 
 // ── ALERT BOX ─────────────────────────────────────────────
@@ -354,106 +296,31 @@ export const AlertBox = ({
     );
 };
 
-// ── SPINNER ───────────────────────────────────────────────
-export const Spinner = ({ color = C.primary }: { color?: string }) => (
-    <div
-        style={{
-            width: 20,
-            height: 20,
-            border: `2px solid ${color}30`,
-            borderTop: `2px solid ${color}`,
-            borderRadius: "50%",
-        }}
-        className="spin"
-    />
-);
-
-// ── CONFIRM BOTTOM SHEET ──────────────────────────────────
-export const ConfirmSheet = ({
-    title,
-    rows,
-    onConfirm,
-    onCancel,
-    confirmLabel = "Confirm & Submit",
-    offline,
-}: {
-    title: string;
-    rows: { label: string; value: string }[];
-    onConfirm: () => void;
-    onCancel: () => void;
-    confirmLabel?: string;
-    offline?: boolean;
-}) => (
-    <div
-        style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.45)",
-            zIndex: 200,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-        }}
-    >
-        <div
-            className="slide-up"
-            style={{
-                background: C.card,
-                borderRadius: "16px 16px 0 0",
-                padding: "24px 20px",
-                width: "100%",
-                maxWidth: 480,
-            }}
-        >
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 18,
-                }}
-            >
-                <Heading size="md">{title}</Heading>
-                <button
-                    onClick={onCancel}
-                    style={{ background: "none", border: "none", cursor: "pointer", color: C.muted }}
+// ── THEAD ─────────────────────────────────────────────────
+export const THead = ({ cols }: { cols: string[] }) => (
+    <thead>
+        <tr>
+            {cols.map(c => (
+                <th
+                    key={c}
+                    style={{
+                        background: C.bg,
+                        padding: "10px 14px",
+                        textAlign: "left",
+                        fontSize: 11,
+                        color: C.muted,
+                        textTransform: "uppercase",
+                        letterSpacing: 0.5,
+                        fontFamily: C.sans,
+                        fontWeight: 600,
+                        whiteSpace: "nowrap",
+                    }}
                 >
-                    <X size={18} />
-                </button>
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-                {rows.map(({ label, value }) => (
-                    <div
-                        key={label}
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            padding: "8px 12px",
-                            background: C.bg,
-                            borderRadius: 8,
-                        }}
-                    >
-                        <span style={{ fontSize: 12, color: C.muted }}>{label}</span>
-                        <span style={{ fontSize: 13, fontWeight: 600, fontFamily: C.mono, color: C.text }}>
-                            {value}
-                        </span>
-                    </div>
-                ))}
-            </div>
-
-            {offline && (
-                <div style={{ marginBottom: 12 }}>
-                    <AlertBox type="warning">Offline — will sync when connected.</AlertBox>
-                </div>
-            )}
-
-            <div style={{ display: "flex", gap: 10 }}>
-                <Btn variant="secondary" onClick={onCancel} fullWidth>Go Back</Btn>
-                <Btn onClick={onConfirm} fullWidth>{confirmLabel}</Btn>
-            </div>
-        </div>
-    </div>
+                    {c}
+                </th>
+            ))}
+        </tr>
+    </thead>
 );
 
 // ── PAGINATOR ─────────────────────────────────────────────
@@ -518,6 +385,128 @@ export const Paginator = ({
     </div>
 );
 
+// ── DATE FILTER ───────────────────────────────────────────
+export const DateFilter = ({
+    from,
+    setFrom,
+    to,
+    setTo,
+}: {
+    from: string;
+    setFrom: (v: string) => void;
+    to: string;
+    setTo: (v: string) => void;
+}) => (
+    <div
+        style={{
+            padding: "12px 16px",
+            background: C.bg,
+            borderBottom: `1px solid ${C.border}`,
+            display: "flex",
+            gap: 12,
+            alignItems: "flex-end",
+            flexWrap: "wrap",
+        }}
+    >
+        <div style={{ minWidth: 140 }}>
+            <Field label="From">
+                <TI type="date" value={from} onChange={e => setFrom(e.target.value)} />
+            </Field>
+        </div>
+        <div style={{ minWidth: 140 }}>
+            <Field label="To">
+                <TI type="date" value={to} onChange={e => setTo(e.target.value)} />
+            </Field>
+        </div>
+        {(from || to) && (
+            <Btn size="sm" variant="ghost" onClick={() => { setFrom(""); setTo(""); }}>
+                Clear ✕
+            </Btn>
+        )}
+    </div>
+);
+
+// ── PHOTO MODAL ───────────────────────────────────────────
+export const PhotoModal = ({
+    url,
+    caption,
+    onClose,
+}: {
+    url: string;
+    caption: string;
+    onClose: () => void;
+}) => (
+    <div
+        onClick={onClose}
+        style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.9)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: 20,
+        }}
+    >
+        <button
+            onClick={onClose}
+            style={{
+                position: "absolute",
+                top: 20,
+                right: 20,
+                background: "#fff2",
+                border: "none",
+                color: "#fff",
+                borderRadius: "50%",
+                width: 36,
+                height: 36,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <X size={18} />
+        </button>
+        <div onClick={e => e.stopPropagation()} style={{ maxWidth: "90vw", maxHeight: "90vh" }}>
+            <img src={url} alt={caption} style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: 8, display: "block" }} />
+            <div style={{ color: "#fff9", fontSize: 12, textAlign: "center", marginTop: 10 }}>{caption}</div>
+        </div>
+    </div>
+);
+
+// ── PHOTO BTN ─────────────────────────────────────────────
+export const PhotoBtn = ({
+    url,
+    caption,
+    setModal,
+}: {
+    url?: string | null;
+    caption: string;
+    setModal: (v: { url: string; caption: string } | null) => void;
+}) => {
+    if (!url) return <Tag color="red">✗ No photo</Tag>;
+    return (
+        <button
+            onClick={() => setModal({ url, caption })}
+            style={{
+                background: C.success + "18",
+                color: C.success,
+                border: `1px solid ${C.success}40`,
+                borderRadius: 6,
+                padding: "3px 10px",
+                fontSize: 11,
+                fontWeight: 600,
+                fontFamily: C.mono,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+            }}
+        >
+            📷 View
+        </button>
+    );
+};
+
 // ── FUEL MULTI SELECT ─────────────────────────────────────
 export const FuelMultiSelect = ({
     value,
@@ -526,9 +515,9 @@ export const FuelMultiSelect = ({
     value: string[];
     onChange: (v: string[]) => void;
 }) => {
-    const toggle = (f: string) =>
+    const toggle = (f: string) => {
         onChange(value.includes(f) ? value.filter(x => x !== f) : [...value, f]);
-
+    };
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {FUEL_OPTIONS.map(f => (
@@ -558,37 +547,3 @@ export const FuelMultiSelect = ({
         </div>
     );
 };
-
-// ── SUCCESS SCREEN ────────────────────────────────────────
-export const SuccessScreen = ({
-    title,
-    subtitle,
-    color = C.success,
-    icon: Icon,
-}: {
-    title: string;
-    subtitle?: string;
-    color?: string;
-    icon?: React.ElementType;
-}) => (
-    <div
-        style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 16,
-            padding: 64,
-            flex: 1,
-        }}
-        className="fade-in"
-    >
-        <div style={{ background: `${color}18`, borderRadius: 50, padding: 20 }}>
-            {Icon && <Icon size={42} color={color} />}
-        </div>
-        <Heading size="lg">{title}</Heading>
-        {subtitle && (
-            <p style={{ color: C.muted, fontSize: 13, textAlign: "center" }}>{subtitle}</p>
-        )}
-    </div>
-);

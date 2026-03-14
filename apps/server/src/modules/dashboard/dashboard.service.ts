@@ -18,6 +18,7 @@ export const dashboardService = {
             lastMeterReading,
             gasBalance,
             totalCompostBags,
+            feedstockAggregate,
             todayFeedstock,
             todayMeter,
             recentFeedstock,
@@ -45,6 +46,12 @@ export const dashboardService = {
 
             // Total compost bags
             compostService.getTotalBags(digesterId),
+
+            // Total feedstock weight
+            prisma.feedstockLog.aggregate({
+                where: { digesterId },
+                _sum: { weight: true },
+            }),
 
             // Did operator log feedstock today?
             prisma.feedstockLog.findFirst({
@@ -182,6 +189,7 @@ export const dashboardService = {
                 }
                 : null,
             totalCompostBags,
+            totalFeedstockKg: +(feedstockAggregate._sum.weight ?? 0).toFixed(1),
             todayStatus,
             gasTrend,
             recentActivity,

@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F4F0E8;
+  --card: #FFFFFF;
+  --primary: #1B3829;
+  --accent: #CF8025;
+  --accent-light: #EFA83C;
+  --text: #141414;
+  --muted: #6D7280;
+  --border: #E4DFD5;
+  --success: #2D6A4F;
+  --danger: #B54343;
+  --warning: #C97C0A;
+  --info: #2563EB;
+
+  --font-display: var(--font-syne), sans-serif;
+  --font-mono: var(--font-dm-mono), monospace;
+  --font-sans: var(--font-outfit), sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg);
+  font-family: var(--font-sans);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--primary) !important;
+  border-color: transparent !important;
+  outline-offset: 0;
+}
+
+button {
+  transition: filter 0.12s, transform 0.1s;
+  cursor: pointer;
+}
+
+button:not(:disabled):hover { filter: brightness(0.92); }
+button:not(:disabled):active { transform: scale(0.97); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.fade-in { animation: fadeIn 0.22s ease; }

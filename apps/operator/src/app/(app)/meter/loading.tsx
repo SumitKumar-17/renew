@@ -23,7 +23,7 @@ export default function MeterLoading() {
 
             {/* Last reading card skeleton */}
             <div style={{ background: "#1B3829", borderRadius: 12, padding: "16px 20px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14 }}>
                     {[1, 2].map(i => (
                         <div key={i}>
                             <div style={{ ...shimmer, width: 90, height: 10, marginBottom: 8, opacity: 0.3 }} />
@@ -37,7 +37,7 @@ export default function MeterLoading() {
             {/* Form card skeleton */}
             <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #E4DFD5", padding: "16px 20px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14 }}>
                         {[1, 2].map(i => (
                             <div key={i}>
                                 <div style={{ ...shimmer, width: 60, height: 12, marginBottom: 6 }} />

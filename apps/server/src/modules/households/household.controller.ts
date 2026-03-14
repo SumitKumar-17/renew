@@ -54,14 +54,24 @@ export const createHousehold = asyncHandler(
     async (req: Request, res: Response) => {
         const user = req.user!;
 
-        if (!user.digesterId) {
-            throw AppError.forbidden("No digester assigned to this operator");
+        // Admin passes digesterId in body; operator uses their own
+        let digesterId: string;
+        if (user.role === "admin") {
+            digesterId = req.body.digesterId;
+            if (!digesterId) {
+                throw AppError.badRequest("digesterId is required for admin");
+            }
+        } else {
+            if (!user.digesterId) {
+                throw AppError.forbidden("No digester assigned to this operator");
+            }
+            digesterId = user.digesterId;
         }
 
-        // Validate body
+        // Validate body (digesterId is stripped out by Zod — schema doesn't include it)
         const dto = CreateHouseholdSchema.parse(req.body);
 
-        const household = await householdService.create(dto, user.digesterId);
+        const household = await householdService.create(dto, digesterId);
 
         res.status(201).json({
             success: true,
